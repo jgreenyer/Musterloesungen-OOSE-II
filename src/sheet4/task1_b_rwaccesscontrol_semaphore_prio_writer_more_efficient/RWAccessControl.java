@@ -91,7 +91,7 @@ public class RWAccessControl<T> {
 
         // Wenn Schreiber warten, dann sollen hier die Leser warten,
         // indem der "Monitor"-Semaphore freigegeben und sofort wieder erworben wird.
-        // Diese Methode soll theoretisch anderen Threads, einschließlich Schreibern,
+        // Diese Methode soll anderen Threads, einschließlich Schreibern,
         // die Chance geben, den kritischen Abschnitt zu betreten. Es basiert auf der Annahme,
         // dass das Betriebssystem-Scheduling fair ist und somit wartenden Schreibern
         // irgendwann der Vorrang gegeben wird.
@@ -105,7 +105,7 @@ public class RWAccessControl<T> {
         // Eine Alternative ist die Verwendung eines weiteren Semaphores, wie in der
         // Alternativläsung gezeigt. Allerdings hat diese auch ihre Nachteile.
         // Besser wäre die Anwendung von eines java.util.concurrent.locks.ReentrantReadWriteLock
-        if(waitingWriters > 0){
+        while(waitingWriters > 0){
             monitorSemaphore.release();
             monitorSemaphore.acquire();
         }
