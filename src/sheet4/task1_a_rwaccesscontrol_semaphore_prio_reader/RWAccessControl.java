@@ -5,6 +5,9 @@ import sheet3.task1_semaphore.BinarySemaphore;
 import java.util.Arrays;
 import java.util.Map;
 
+// Diese Lösung der RWAccessControl behebt das zweite "Problem"
+// der ersten Lösung:
+// Wenn Leser warten sollen keine Schreiber drankommen können.
 public class RWAccessControl<T> {
 
     private T[] data;
