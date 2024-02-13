@@ -5,6 +5,17 @@ import sheet3.task1_semaphore.BinarySemaphore;
 import java.util.Arrays;
 import java.util.Map;
 
+// Diese Läsung der RWAccessControl hat zwei Eigenschaften
+// oder "Probleme":
+// (1) in dieser Lösung kann es passieren, dass wenn ein
+// Reader aktiv ist, und dann ein Writer wartet,
+// und immer weitere Reader aktiv werden, der Writer
+// nie wieder drankommt.
+// (2) Andererseits kann es sein, dass wenn ein Writer
+// aktiv ist und dann ein Reader wartet und noch ein
+// weiterer Writer, dass dann der zweite Writer
+// vor dem Reader drankommt, statt dem Reader Vorzug
+// zu lassen.
 public class RWAccessControl<T> {
 
     private T[] data;
