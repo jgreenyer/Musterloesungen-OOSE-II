@@ -5,6 +5,8 @@ import sheet3.task1_semaphore.BinarySemaphore;
 import java.util.Arrays;
 import java.util.Map;
 
+// Diese Lösung der RWAccessControl haben Schreiber vorrang.
+// Wenn ein Schreiber wartet, sollen Leser blockiert werden.
 public class RWAccessControl<T> {
 
     private T[] data;
@@ -57,14 +59,13 @@ public class RWAccessControl<T> {
     }
 
     public void write(Map<Integer,T> changes) throws InterruptedException{
-        // In dieser Variante hat der Writer einige Verwaltungstätigkeiten,
-        // die durch den monitorSemaphore abgesichert werden müssen
-        monitorSemaphore.acquire();
         // ist dies der erste Schreiber, der auf Zugriff wartet?
         // -> waitingWritersSemaphore belegen.
         if(waitingWriters == 0){
             waitingWritersSemaphore.acquire();
         }
+        // Der Zähler für die wartenden Writer wird nun erhöht.
+        monitorSemaphore.acquire();
         waitingWriters++;
         monitorSemaphore.release();
 
@@ -74,13 +75,13 @@ public class RWAccessControl<T> {
         monitorSemaphore.acquire();
         // Nun wartet dieser Writer nicht mehr
         waitingWriters--;
+        monitorSemaphore.release();
+
         // Gibt es keinen weiteren wartenden Schreiber,
         // waitingWritersSemaphore freigeben
         if(waitingWriters == 0){
             waitingWritersSemaphore.release();
         }
-        monitorSemaphore.release();
-
 
         System.out.println("Writing changes " + changes);
         for (int i = 0; i < data.length; i++) {
